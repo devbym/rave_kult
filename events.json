@@ -1,0 +1,93 @@
+{
+    "events": {
+        "2022": {
+            "2": {
+                "24": {
+                    "Dondernacht": {
+                        "location": "Utrecht",
+                        "venue": "TivoliVredenburg"
+                    },
+                    "Escalada": {
+                        "location": "Amsterdam",
+                        "venue": "Disco Dolly"
+                    }
+                },
+                "25": {
+                    "Amelie Lens": {
+                        "location": "Amsterdam",
+                        "venue": "De MarktKantine"
+                    },
+                    "Another Event": {
+                        "location": "Middelburg",
+                        "venue": "Rooie Oortjes"
+                    }
+                },
+                "26": {},
+                "27": {},
+                "28": {}
+            },
+            "3": {
+                "1": {
+                    "Techno Tuesday": {
+                        "location": "Amsterdam",
+                        "venue": "Melkweg",
+                        "starttime": "23:30"
+                    },
+                    "YUMMY": {
+                        "location": "Rotterdam",
+                        "venue": "Villa Thalia",
+                        "starttime": "22:00"
+                    },
+                    "Mardi Gras": {
+                        "location": "Antwerpen",
+                        "venue": "Club Lima",
+                        "starttme": "23:00"
+                    }
+                },
+                "2": {},
+                "3": {
+                    "bambu": {
+                        "location": "Amsterdam",
+                        "venue": "Olivia",
+                        "starttime": "22:00"
+                    }
+                },
+                "4": {
+                    "30 Something": {
+                        "location": "Amsterdam",
+                        "venue": "Melkweg",
+                        "starttime": "23:00"
+                    },
+                    "5th on Friday": {
+                        "location": "Arnhem",
+                        "venue": "5th Avenue",
+                        "starttime": "22:00"
+                    }
+                },
+                "5": {},
+                "17": {
+                    "Bday Craze": {
+                        "location": "Praag",
+                        "venue": "City TBA",
+                        "starttime": "18:00"
+                    }
+                }
+            }
+        }
+    },
+    "organisations": [
+        "Devbym",
+        "Harmony",
+        "RAW",
+        "Wrong",
+        "Mayapur",
+        "KAVE",
+        "Komiks"
+    ],
+    "genres": [
+        "techno",
+        "electro",
+        "house",
+        "trance"
+    ]
+}
