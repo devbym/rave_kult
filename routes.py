@@ -11,3 +11,8 @@ def home():
     return render_template("index.html",locations=[loc for loc in Location.query.all()],roles=list(UserRole))
 
 
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    sesh.flush()
+    sesh.remove()
