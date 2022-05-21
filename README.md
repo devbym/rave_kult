@@ -1,6 +1,8 @@
 # ravekult is an online event aggregator focusing on events with electronic, experimental and rave music.
 # We stand for building a community on open information, hosted on open-source technologies 
 
+## Currently work in progress.
+
 - Aggregate information from different closed online sources into a single open calendar.
 - Manage channels on different socail platform by using information from our aggregated source.
 - Editors pick and weeklz content posts
