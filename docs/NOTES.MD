@@ -23,3 +23,17 @@ As its name implies. Ravecult seeks to promote all events and activities that or
 - Landing Page / Website as central place for content >Buy domainname?
 - Push information service - 1. Individual events feed 2. Weekly (localized?) summary 
 - Application Framework
+
+
+### Application
+- APPLICATION
+    Python 3:
+        FILE app.py:
+            App config
+            App Settings
+            Env Variables
+            User Settings
+            Logging
+            SQlite3 
+            Tests
+        
