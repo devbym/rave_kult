@@ -1,4 +1,4 @@
-{
+{"$schema": "http://json-schema.org/schema",
     "events": {
         "2022": {
             "2": {
@@ -70,7 +70,24 @@
                         "location": "Praag",
                         "venue": "City TBA",
                         "starttime": "18:00"
+                    },
+                    "18":{
+                        "location":"Prague",
+                        "venue":"Ankali"
+
                     }
+                }
+            },
+            "4": {
+                "1": {
+                    "Anormal": {
+                        "location": "Prague",
+                        "Venue": "Ankali",
+                        "Startime": "22:00"
+                    }
+                },
+                "15": {
+                    "None":"None"
                 }
             }
         }
