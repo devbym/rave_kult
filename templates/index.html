@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-nl">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Rave_Kult (Beta)</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+    <title>Rave_Kult (Beta)</title>
+</head>
 
-    <body>
-        <header>
+<body>
+    <header>
+        <a href="/">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                 width="64px" height="" viewBox="-0.5 -0.5 123 113">
                 <defs></defs>
@@ -21,141 +25,142 @@
                     <path d="M 117 107 Q 77 57 67 52 Q 57 47 117 7" fill="none" stroke="#ff8c00" stroke-width="10"
                         stroke-miterlimit="10" pointer-events="stroke"></path>
                 </g>
-            </svg>
-            <h1 style="margin:auto;text-align:center;
-    ">Welcome to Rave Kult</h1>
-        </header>
-        <main>
+            </svg></a>
+        <h1>Welcome to Rave Kult (beta)</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Upcoming Events</h2>
+            {% for x in events %}
+            <article class="ev">
+                <h4>{{x.name}}</h4>
+                <h5>{{x.description}}</h5>
+                <span>📍 {{x.location}}</span>
+                <span>{{x.eventdate}}</span>
+                <span>💰  &euro; {{x.price}}</span>
+                <span>{{x.eventduration}}</span>
+                <span>{{x.eventtype}}</span>
+                <span>{{x.created}}</span>
+            </article>
+            {% endfor %}
+        </section>
 
-            <section>
-                <h4>Follow us on Telegram: <a href="t.me/cz_raves" autocapitalize>cz_raves</a></h4>
-                <article class="logo1">
-                    No logo herre.
-                </article>
-            </section>
-            <section class="bg3" id="about">
-                <label for="about">ABOUT RAVEKULT</label>
-                <article>
-                    <h4>For organizers & promoters</h4>
-                    <span>Tired of promoting on Facebook or RA and looking for better ways to get exposure for your
-                        upcoming events? </span>
-                    <span>Do you want more control over your ticketing services? OR in need of more flexibility? </span>
-                    <h4>For ravers and people </h4>
-                    <span> One place to discover events and engage your network. </span>
-                    <span>Easily engaging, sharing and promoting your favorite events </span>
-                    <span><img
-                            src="https://upload.wikimedia.org/wikipedia/commons/4/49/Aspectos_das_Popula%C3%A7%C3%B5es_Brasileiras_%28Painel_2%29_02.jpg"
-                            alt=""></span>
-                </article>
-            </section>
-            <!-- Start of user-form -->
-            <section id="add_user-section">
-                <label for="add_user-section">Add a user</label>
-                <form method="post" action="api/user" id="user-form" formenctype="application/x-www-form-urlencoded">
-                    <input type="text" placeholder="Username" name="name" /><br />
-                    <input type="email" placeholder="Emailaddress" name="email" /><br />
-                    {#% if modal == 'signup' %#}
-                    <input type="text" id="" func name="func" placeholder="Func" /><br />
-                    {#% endif %#}
-                    <input type="password" placeholder="Password" name="pass" id="pwbox" />
+        <section>
+            <h4>Follow us on Telegram: <a href="t.me/cz_raves" autocapitalize>cz_raves</a></h4>
 
-                    <output for="password" id="show-pw" style="color:#bbb" onmouseover="pass.type='text'"
-                        onmouseout="pass.type='password'"><i class="fa fa-eye"></i></output><br />
-                        <select name="userrole-select" id="userrole-select">
-                            <option value="Select one" placeholder="" selected disabled> </option>
-                            {% for role in roles %}
-                            <option value="{{role}}">{{role}}</option>
-                            {% endfor %}
-                        </select>
-                    <input type="submit" value="Submit" />
-                </form>
-            </section>
-            <!-- Start of location-form -->
-            <section id="location-section" name="location-section">
+        </section>
+        <section class="bg3" id="about">
+            <label for="about">ABOUT RAVEKULT</label>
+            <article>
+                <h2>For organizers & promoters</h2>
+                <h4>Promote events in all the places</h4>
+                <span>Tired of promoting on Facebook or RA and looking for better ways to get exposure for your
+                    upcoming events? </span>
+                <span>Do you want more control over your ticketing services? OR in need of more flexibility? </span>
+                <h2>For humans, people and all others </h2>
+                <span> One place to discover events and engage your network. </span>
+                <span>Easily engaging, sharing and promoting your favorite events </span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Aspectos_das_Popula%C3%A7%C3%B5es_Brasileiras_%28Painel_2%29_02.jpg"
+                    alt="">
+
+            </article>
+        </section>
+        <!-- Start of user-form -->
+        <section id="add_user-section">
+
+        </section>
+        <section>{% for x in users %}<p>{{x.name}}</p>{% endfor %}</section>
+
+        <!-- Start of location-form -->
+        <section id="location-section" name="location-section">
+            <article>
+            <label for="add_user-section">Add a user</label>
+            <form method="post" action="api/user" id="user-form" formenctype="application/x-www-form-urlencoded">
+                <input type="text" placeholder="Username" name="name" /><br />
+                <input type="email" placeholder="Emailaddress" name="email" /><br />
+                {#% if modal == 'signup' %#}
+                <input type="text" id="func" name="func" placeholder="Func" /><br />
+                {#% endif %#}
+                <input type="password" placeholder="Password" name="pass" id="pass" />
+
+                <output for="password" id="show-pw" style="color:#bbb" onmouseover="pass.type='text'"
+                    onmouseout="pass.type='password'"><i class="fa fa-eye"></i></output><br />
+                <select name="userrole-select" id="userrole-select">
+                    <option value="Select one" placeholder="" selected disabled> </option>
+                    {% for role in roles %}
+                    <option value="{{role}}">{{role}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit" />
+            </form>
+            </article>
+            <article>
                 <label for="location-section">Add a Location</label>
-                <form action="api/location" method="post" name="location-form" id="location-form"
-                    formenctype="application/x-www-form-urlencoded">
-                    <input type="text" placeholder="Location Name" name="locationName" required /><br>
-                    <input type="text" placeholder="Street name" name="streetname"><br>
-                    <input type="text" placeholder="Street number" name="streetnumber"><br>
-                    <input type="text" placeholder="City" name="city" required><br>
-                    <!-- <input type="datetime-local" placeholder="EventDatetime" name="EventDatetime">
+            <form action="api/location" method="post" name="location-form" id="location-form"
+                formenctype="application/x-www-form-urlencoded">
+                <input type="text" placeholder="Location Name" name="locationName" required /><br>
+                <input type="text" placeholder="Street name" name="streetname"><br>
+                <input type="text" placeholder="Street number" name="streetnumber"><br>
+                <input type="text" placeholder="City" name="city" required><br>
+                <!-- <input type="datetime-local" placeholder="EventDatetime" name="EventDatetime">
                     <input type="number" placeholder="LocationPrice" name="LocationPrice">
                     <select name="EventLocation" id="EventLocation" form="location-form">
                         <option value="Ankali">Ankali</option>
                         <option value="Altenburg 1964">Altenburg 1964</option>
                         <option value="Cross Club">Cross Club</option>
                     </select> -->
-                    <select name="locationcountry" id="locationcountry" form="location-form" required>
-                        <option value="NLD">Netherlands</option>
-                        <option value="GER">Germany</option>
-                        <option value="CZE" selected>Czech Republic</option>
-                    </select><br>
-                    <input type="submit" value="Submit" /><br>
-                </form>
-            </section>
-            <!-- Start of event-form -->
-            <section id="event-section">
-                <label for="event-section">Add an Event</label><br>
-                <form action="api/event" method="post">
-                    <input type="text" placeholder="Event Name" name="eventname" required><br>
-                    <input type="number" placeholder="Event Price" min="1" max="999" value="10" name="eventprice"><br>
-                    <input type="text" placeholder="Description" name="eventdescription" id="eventdescription"><br>
-                    <input type="datetime"  placeholder="Event Date" name="eventdate" id="eventdate" required><br>
-                    <input type="number"  min="0" max="24" value="22" placeholder="Event Starttime"
-                    name="eventstarttime" id="eventstarttime"><output for="eventstarttime" value="#eventstarttime.value"></output> 
-                         <br>
-                    <select name="eventlocation" id="eventlocation">
-                        {% for x in locations %}
-                        <option value="{{x.name}}">{{x.name}}</option>
-                        {% endfor %}
-                    </select><br>
-                    <input type="submit" value="Submit" /><br>
+                <select for="location-form" name="locationcountry" id="locationcountry" form="location-form" required>
+                    <option value="NLD">Netherlands</option>
+                    <option value="GER">Germany</option>
+                    <option value="CZE" selected>Czech Republic</option>
+                    <option value="SLO">Slovakia</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="POL">Poland</option>
+                    <option value="HUN">Hungary</option>
+                    <option value="DEN">Denmark</option>
 
-                </form>
-            </section>
+                </select><br>
+                <input type="submit" value="Submit" for="location-form" /><br>
+            </form>
+            </article>
+            <article> <label for="event-section">Add an Event</label><br>
+            <form action="api/event" method="post" formenctype="application/x-www-form-urlencoded" name="event-form"
+                id="event-form">
+                <input type="text" placeholder="Event Name" name="eventname" required><br>
+                <input type="datetime-local" value="2022-01-01T22:00" min="2022-01-01T00:00" max="2099-01-01T00:00"
+                    placeholder="Event Date" name="eventdate" id="eventdate" required><br>
+                <input type="number" min="0" max="24" value="10" placeholder="Duration" name="eventduration"
+                    id="eventduration"><br>
+                <input type="text" placeholder="Description" name="eventdescription" id="eventdescription"><br>
 
-        </main>
+                <input type="number" placeholder="Event Price" min="1" max="999" value="10" name="eventprice"><br>
+                <!-- <output for="eventstarttime" value="#eventstarttime.value"></output>  -->
+                <br>
+                <select name="eventlocation" id="eventlocation">
+                    {% for x in locations %}
+                    <option value="{{x.name}}">{{x.name}}</option>
+                    {% endfor %}
+                </select><br>
+                <select name="eventtype" id="eventtype">
+                    {% for type in eventtypes%}
+                    <option value="{{type}}">{{type}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit" />      <input type="reset"  value="Clear Form"><br>
+
+            </form></article>
+        </section>
+        <!-- Start of event-form -->
+        <section id="event-section">
+           
+        </section>
+
+    </main>
 
 
-    </body>
-    <style>
-        body {
-            width: 100%;
-        }
-
-        header {
-            display: grid;
-            grid-template-columns: 25% 50% 25%;
-            margin-bottom: 2em;
-        }
-
-        header>h1 {
-            width: 100%;
-            border-bottom: 1px solid darkorange;
-        }
-
-        main {
-            margin: auto;
-            width: 80vw;
-            background: #ddd;
-        }
-
-        section {
-            width: 100%;
-            padding: 0.5em 0;
-            margin: 0 0.5em;
-        }
-
-        img {
-            display: inline-flex;
-            margin: auto;
-            width: 100%;
-        }
-        form>* {
-            margin:0.2em;
-            padding:0.2em;
-        }
-    </style>
+</body>
+<style>
+  
+</style>
 
 </html>
