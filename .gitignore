@@ -1,0 +1,10 @@
+*.pyc
+__pycache__
+
+app.db
+static/_styles/*
+static/*.old
+*.DS_Store
+settings.py
+routes.txt
+app_config.cfg
