@@ -1,10 +1,15 @@
-from flask import Flask
+import os
+from flask import Flask, logging
 from flask.json import JSONEncoder
 from database import sesh, init_db
 from datetime import datetime as dt
+import logging
+import subprocess
 
 
 
+
+subprocess.run(["sass", "static/_styles/base.scss", "static/style.css"],check=True)
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -36,7 +41,7 @@ def create_app():
 if __name__ == "__main__":
     try:
         app = create_app()
-        print(app.config)
+        logging.info("APP BUILT FOR DEPLOYMENT")
         app.run(host="127.0.0.1", port=8473, debug=True)
     except Exception as e:
         print("Application Error: ", e, "\n\n", e.args, "\n")
