@@ -1,112 +1,468 @@
-  body {
-        width: 100%;
-        line-height: 1.2;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
 
-    * {
-        box-sizing: border-box;
-    }
+body {
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+    line-height: 1.25;
+}
 
-    header {
+* {
+    box-sizing: border-box;
+}
+
+
+// Temp styles
+.mapEmbed {
+    display: none;
+}
+
+// TESTING
+:root {
+    --icon-reddit: url('https: //cdns.iconmonstr.com/wp-content/releases/preview/2016/240/iconmonstr-reddit-3.png');
+}
+
+
+// END TESTING
+
+body {
+    >header {
         display: grid;
-        grid-template-columns: 25% 50% 25%;
-        margin-bottom: 2em;
-    h1 {
-        width: 100%;
-        border-bottom: 1px solid darkorange;
-    }
-    }
+        grid-template-columns: 1fr 2fr 1fr;
 
-    main {
-        margin: auto;
-        width: 80vw;
-        background: #ddd;
-    }   
-
-    h1,h3,h5 {
-        margin: auto;
-        text-align: center;
-    }
-    h2,h4 {
-        padding:1em;
-        font-size: larger;
-        border-bottom:1px solid salmon;
-    }
-
-    section {
-        width: 100%;
-        display: grid;
-        padding: .5em 0;
-    }
-
-    article {
-        padding: 0.5em 0;
-        display: block;
-        width: 100%;
-        background: #333;
-        color: #ccc;
-        border:1px solid darkorange;
-
-    &.ev {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap:2em;
-        color:red;
-        h1,h2,h3,h4,h5,h6 {
-            display: inline-block;
-            grid-column: span 2;
+        h1 {
+            width: 100%;
+            border-bottom: 1px solid darkorange;
+            text-align: center;
         }
     }
 
-    
+    >nav {
+        padding: .5em 0;
+        display: flex;
+        justify-content: space-evenly;
+
+
+        a {
+            padding: .5em 1em;
+            border: 1px solid brown;
+
+        }
+    }
+}
+
+main {
+    margin: auto;
+    width: 80vw;
+
+    header {
+        &.eventfilter {
+            background-color: yellow;
+            padding: .5em;
+        }
+    }
+
+
+    h1,
+    h3,
+    h5 {
+        text-align: center;
+    }
+
     h2,
     h4,
-    h5 {
-        margin:0;
-        padding:1em;
-        background: #555;
+    h6 {
+        background: darkorange;
+        text-indent: .5em;
     }
 
-     span {
-        display: block;
-        padding: 1em;
-        margin: .5em;
-        color: #ccc;
-    }
-     label {
-        font-size:150%;
-        font-weight: 500;
-        padding:.5em;
-    }
-     form input {
-        margin:.3em;
-        padding:.2em;
-        line-height: 1.5;
-        width:20em;
-        outline:0;
-        border:0;
-    }
-    img {
+    section {
+        header {
+            margin: auto;
 
-        place-self: center;
-        margin: 0 auto;
-        padding: .2em;
-    }
-    }
+        }
 
-    img {
-        display: inline-flex;
-        object-fit: scale-down;
-        place-self: center;
-        vertical-align: middle;
-        height: auto;
+        &:first-child {
+            padding: .5em;
+        }
+
         width: 100%;
-        margin: 1em;
+        margin:.25em auto;
+        line-height:1.25;
+        padding:0;
+
+        background: rgb(200, 200, 200);
+        color: rgb(20, 20, 20);
+
+        input {
+            height: 3em;
+            box-shadow: 2px 3px 12px lightgray;
+            margin: .5em;
+        }
+
+        *.wide {
+            grid-column: span 4
+        }
+
+        &.eventList {
+
+            h1,
+            h2,
+            h3 {
+                display: flex;
+                margin: auto;
+                vertical-align: middle;
+            }
+
+            &.eventfilter {
+                header {
+                    display: flex;
+                    margin: auto;
+                    text-align: center;
+                }
+
+                span {
+
+                    font-weight: 700;
+                    font-size: 200%;
+
+                }
+
+
+            }
+        }
+
+
+        article {
+            padding: 0;
+            margin: auto;
+
+            header {
+                width: 100%;
+                font-size: 125%;
+                letter-spacing: 1px;
+                padding: .5em;
+            }
+
+            &.ev {
+                display: grid;
+                grid-template-columns: 3fr auto max-content auto 3fr;
+                grid-gap: 0 .25em;
+
+                >header {
+                    grid-column: span 9;
+                    background-color: dodgerblue;
+                    height: auto;
+
+                    >:nth-child(1) {
+                        flex: 35%;
+                    }
+
+                    >:nth-child(2) {
+                        flex: 35%;
+                    }
+
+                    >:nth-child(3) {
+                        place-self: start;
+                        flex: 30%;
+                    }
+                }
+
+                >:nth-child(2) {
+                    grid-row: span 3;
+                    grid-column: 1;
+                    width: 25em;
+                    line-break: anywhere;
+
+                }
+
+                aside {
+                    height: 100%;
+                    grid-column: span 3;
+                    grid-row: span 1;
+                    display: flex;
+                }
+
+                .badges {
+                    display: flex;
+                    place-items: flex-end;
+                    margin: 0;
+                    grid-row: 4;
+                    width: 100%;
+                    grid-column: 3/6;
+                    gap: 0 .5em;
+                }
+
+                .badge {
+                    padding: 0.25em;
+                    border: 1px solid grey;
+                    border-radius: 5% 5%;
+                    flex: 1;
+                    text-shadow: 1px 1px black;
+                    text-align: center;
+                }
+
+                img {
+                    grid-row: span 3;
+                    grid-column: span 3;
+                    max-width: 20em;
+                    max-height: 20em;
+                    width: max-content;
+                    height: max-content;
+                    margin: 0 auto;
+                    object-fit: fill;
+
+                }
+            }
+
+            // h2,
+            // h4,
+            // h5 {
+            //     text-align: left;
+            //     padding: .25em;
+            //     margin: .25em;
+
+            // }
+
+            p,
+            span {
+                color: white;
+                text-align: left;
+            }
+
+            form {
+                fieldset {
+                    grid-template-columns: auto 1fr;
+                    border: 0;
+                    font-weight: 300;
+
+                    * {
+                        justify-self: stretch;
+                    }
+
+                    legend {
+                        color: white;
+                        max-width: 75%;
+                        width: fit-content;
+
+                    }
+                }
+
+
+                input,
+                select,
+                textarea {
+                    width: 100%;
+                    place-self: center;
+                    max-width: 70%;
+                    align-self: stretch;
+                }
+
+                input[type=submit],
+                input[type=reset],
+                //input[type=datetime-local],
+                    {
+                    padding: .25em 2em;
+                    width: 80%;
+                    margin: 0 1em
+                }
+            }
+
+            img {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        img {
+            display: inline-flex;
+            object-fit: contain;
+            vertical-align: middle;
+            height: auto;
+            width: 100%;
+        }
+    }
+}
+
+form,
+*>form {
+    place-self: center;
+    background-color: #ffffff;
+    margin: 4em auto;
+    padding: 1em;
+    width: 70%;
+    min-width: 12em;
+
+    fieldset {
+        place-items: center;
+        display: grid;
+        grid-gap: .5em;
+
+
+        legend {
+            max-width: 75%;
+            background-color: gray;
+            color: white;
+            padding: .5em 1em;
+            text-align: center;
+        }
+
+        label {
+            color: black;
+            font-weight: 500;
+            padding: .5em;
+        }
+    }
+
+    input,
+    select {
+        margin: .25em;
+        padding: .5em;
+        width: 100%;
+    }
+
+}
+
+footer {
+    margin: .5em auto;
+    display: flex;
+    justify-content: space-between;
+    border: .5em solid #666;
+    width: 80vw;
+    padding: .5em;
+
+    a {
+        padding: .5em 1em;
+    }
+}
+
+dialog {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    transition: all 0.5s ease-in-out;
+    backdrop-filter: blur(10px);
+    height: 100%;
+    width: 100%;
+
+    &:target {
+        display: flex;
+        box-shadow: 0 0 2em 0 rgba(212, 212, 212, 0.2), 0 1em 1em 0 rgba(212, 212, 212, 0.24);
+
+    }
+
+    .dlgContent {
+        padding: 1em;
+        background: #333;
+        color: #ccc;
+        max-width: max-content;
+        margin: auto;
+        box-shadow: -4px -4px 3px 3px rgba(157, 157, 157, 0.1), 1px 1px 1em 1em rgba(255, 255, 255, 0.1);
+        transform: translateY(50%);
+        display: grid;
+        grid-template-columns: min-content max-content;
+        gap: 1em;
+    }
+
+    .dialogbox {
+        margin: auto;
+        backdrop-filter: blur(1em);
+        background: rgba(255, 140, 0, 0.6);
         padding: 1em;
     }
 
-
-    form>* {
-        margin: 0.2em;
-        padding: 0.2em;
+    form input {
+        border: 0;
     }
+
+    .frmDefaultbtn {
+        margin: 0 .5em
+    }
+
+    .dlgClose {
+        position: absolute;
+        right: 0.5em;
+        top: .5em;
+    }
+
+    .message,
+    a {
+        text-decoration: none;
+        color: white;
+    }
+
+    h2 {
+        color: white;
+        margin: auto;
+        top: 0;
+        left: 0;
+        position: relative;
+    }
+}
+
+
+#rk-logo1 {
+    max-width: 4em;
+    max-height: 4em;
+    margin: auto;
+    padding: .5em;
+}
+
+.formControls {
+    width: 50%;
+    margin: auto;
+    display: flex;
+}
+
+#locationForm {}
+
+input.invalid {
+    background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.formtab {
+    display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step.active {
+    opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+    background-color: #04AA6D;
+}
+
+header p {
+    margin: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    padding: 1em;
+    margin-right: 2em;
+}
+
+#topCountry,
+#topCity {
+    padding: .5em;
+    border: 0;
+    color: navy;
+    background: white;
+    font-size: 100%;
+}

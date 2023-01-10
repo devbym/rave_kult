@@ -1,166 +1,315 @@
-<!DOCTYPE html>
-<html lang="en-nl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-    <title>Rave_Kult (Beta)</title>
-</head>
-
-<body>
-    <header>
-        <a href="/">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                width="64px" height="" viewBox="-0.5 -0.5 123 113">
-                <defs></defs>
-                <g>
-                    <path d="M 57 97 Q 7 57 32 52 Q 57 47 27 12 Q -3 -23 7 107" fill="none" stroke="#ff8c00"
-                        stroke-width="10" stroke-miterlimit="10" pointer-events="stroke"></path>
-                    <path d="M 67 7 Q 67 7 67 107" fill="none" stroke="#ff8c00" stroke-width="10" stroke-miterlimit="10"
-                        pointer-events="stroke"></path>
-                    <path d="M 117 107 Q 77 57 67 52 Q 57 47 117 7" fill="none" stroke="#ff8c00" stroke-width="10"
-                        stroke-miterlimit="10" pointer-events="stroke"></path>
-                </g>
-            </svg></a>
-        <h1>Welcome to Rave Kult (beta)</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Upcoming Events</h2>
-            {% for x in events %}
-            <article class="ev">
-                <h4>{{x.name}}</h4>
-                <h5>{{x.description}}</h5>
-                <span>📍 {{x.location}}</span>
-                <span>{{x.eventdate}}</span>
-                <span>💰  &euro; {{x.price}}</span>
-                <span>{{x.eventduration}}</span>
-                <span>{{x.eventtype}}</span>
-                <span>{{x.created}}</span>
-            </article>
+{% extends 'base.html.j2' %}
+{% block TITLE %}
+Journey to a thousand raves
+{% endblock TITLE %}
+{% block BODY %}
+<nav>
+    <a href="#location-section">Add Location</a>
+    <a href="#add-event">Add Event</a>
+    <a href="#add-org">Add Org</a>
+    <a href="/blog">Blog</a>
+    {% if login %}
+    <a href="/admin">Admin</a>
+    {% endif %}
+</nav>
+<main>
+    {% with messages = get_flashed_messages() %}
+    {%if messages %}
+    <section>
+        <article class="message flashes autohide">
+            {% for message in messages %}
+            <span> {{ message }}</span>
             {% endfor %}
-        </section>
-
-        <section>
-            <h4>Follow us on Telegram: <a href="t.me/cz_raves" autocapitalize>cz_raves</a></h4>
-
-        </section>
-        <section class="bg3" id="about">
-            <label for="about">ABOUT RAVEKULT</label>
-            <article>
-                <h2>For organizers & promoters</h2>
-                <h4>Promote events in all the places</h4>
-                <span>Tired of promoting on Facebook or RA and looking for better ways to get exposure for your
-                    upcoming events? </span>
-                <span>Do you want more control over your ticketing services? OR in need of more flexibility? </span>
-                <h2>For humans, people and all others </h2>
-                <span> One place to discover events and engage your network. </span>
-                <span>Easily engaging, sharing and promoting your favorite events </span>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Aspectos_das_Popula%C3%A7%C3%B5es_Brasileiras_%28Painel_2%29_02.jpg"
-                    alt="">
-
-            </article>
-        </section>
-        <!-- Start of user-form -->
-        <section id="add_user-section">
-
-        </section>
-        <section>{% for x in users %}<p>{{x.name}}</p>{% endfor %}</section>
-
-        <!-- Start of location-form -->
-        <section id="location-section" name="location-section">
-            <article>
-            <label for="add_user-section">Add a user</label>
-            <form method="post" action="api/user" id="user-form" formenctype="application/x-www-form-urlencoded">
-                <input type="text" placeholder="Username" name="name" /><br />
-                <input type="email" placeholder="Emailaddress" name="email" /><br />
-                {#% if modal == 'signup' %#}
-                <input type="text" id="func" name="func" placeholder="Func" /><br />
-                {#% endif %#}
-                <input type="password" placeholder="Password" name="pass" id="pass" />
-
-                <output for="password" id="show-pw" style="color:#bbb" onmouseover="pass.type='text'"
-                    onmouseout="pass.type='password'"><i class="fa fa-eye"></i></output><br />
-                <select name="userrole-select" id="userrole-select">
-                    <option value="Select one" placeholder="" selected disabled> </option>
-                    {% for role in roles %}
-                    <option value="{{role}}">{{role}}</option>
+        </article>
+    </section>
+    {% endif %}
+    {% endwith %}
+    <header class="eventfilter">
+        <span id="fcountry">Upcoming Events in<span>
+                <select onchange="countryChange(this,'topCity');" name="topCountry"
+                    id="topCountry">{% for cnt in countries %}
+                    <option value="{{cnt.code}}">{{cnt.name}}</option>
                     {% endfor %}
                 </select>
-                <input type="submit" value="Submit" />
-            </form>
-            </article>
-            <article>
-                <label for="location-section">Add a Location</label>
-            <form action="api/location" method="post" name="location-form" id="location-form"
-                formenctype="application/x-www-form-urlencoded">
-                <input type="text" placeholder="Location Name" name="locationName" required /><br>
-                <input type="text" placeholder="Street name" name="streetname"><br>
-                <input type="text" placeholder="Street number" name="streetnumber"><br>
-                <input type="text" placeholder="City" name="city" required><br>
-                <!-- <input type="datetime-local" placeholder="EventDatetime" name="EventDatetime">
-                    <input type="number" placeholder="LocationPrice" name="LocationPrice">
-                    <select name="EventLocation" id="EventLocation" form="location-form">
-                        <option value="Ankali">Ankali</option>
-                        <option value="Altenburg 1964">Altenburg 1964</option>
-                        <option value="Cross Club">Cross Club</option>
-                    </select> -->
-                <select for="location-form" name="locationcountry" id="locationcountry" form="location-form" required>
-                    <option value="NLD">Netherlands</option>
-                    <option value="GER">Germany</option>
-                    <option value="CZE" selected>Czech Republic</option>
-                    <option value="SLO">Slovakia</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="POL">Poland</option>
-                    <option value="HUN">Hungary</option>
-                    <option value="DEN">Denmark</option>
+                <select name="topCity" id="topCity">
+                    <option value="">Select a city</option>
+                </select>
+    </header>
+    <section class="eventList">
 
-                </select><br>
-                <input type="submit" value="Submit" for="location-form" /><br>
-            </form>
-            </article>
-            <article> <label for="event-section">Add an Event</label><br>
-            <form action="api/event" method="post" formenctype="application/x-www-form-urlencoded" name="event-form"
-                id="event-form">
-                <input type="text" placeholder="Event Name" name="eventname" required><br>
-                <input type="datetime-local" value="2022-01-01T22:00" min="2022-01-01T00:00" max="2099-01-01T00:00"
-                    placeholder="Event Date" name="eventdate" id="eventdate" required><br>
-                <input type="number" min="0" max="24" value="10" placeholder="Duration" name="eventduration"
-                    id="eventduration"><br>
-                <input type="text" placeholder="Description" name="eventdescription" id="eventdescription"><br>
+    </section>
+    <section>
+        {% for x in events %}
+        <article class="ev">
+            <header>
+                <span>{{x.name}}</span>
+                <span>📍{{x.location}}, {{x.city}}</span>
+                <span><time datetime="{{x.date}}" class="textHide">{{x.date.4lace('T',' ')}}</time></span>
 
-                <input type="number" placeholder="Event Price" min="1" max="999" value="10" name="eventprice"><br>
+            </header>
+            <p>Description: {{x.description}}</p>
+            <img src="{{x.banner}}" alt="Eventimage">
+            <!-- <p>{{x.date}}</p> -->
+            <aside>
+                Duration:
+                <span></span> <!-- <p>{{x.duration}} hours</p> -->
+            </aside>
+            <aside class="badges">
+                <p class="badge">{{x.type}}</p>
+                <p class="badge">💰 &euro; {{x.price}}</p>
+                {% for badge in x.badges %}
+                <p class="badge">{{badge.name}} {{badge.icon}}</p>
+                {% endfor %}
+                <p class="textHide" style="display:none;">{{x.created}}</p>
+            </aside>
+        </article>
+        {% endfor %}
+    </section>
+
+    <section class="wide">
+        <p class="wide">Follow us on Telegram: <a href="t.me/cz_raves" autocapitalize>CZ_raves channel</a></p><br>
+        <p class="wide">Check out our subreddit: <a href="reddit.com/r/ravekult">Ravekult on Reddit</a></p>
+    </section>
+
+    <!-- Start of location-form -->
+    <section id="location-section" name="location-section">
+        <article>
+            <h2 onclick='locationForm.style.display="block"' for="location-section">Add a Location</h2>
+            <form action="api/location" method="post" name="locationForm" id="locationForm" style="display: none;">
+                <fieldset form="locationForm" class="formtab" style="display:block">
+                    <legend>New Location</legend>
+
+                    <label for="locationName">Name</label>
+                    <input type="text" placeholder="Location Name" name="locationName" required />
+                    <br>
+                    <label for="locationUrl">Website</label>
+                    <input type="url" placeholder="URL" name="locationUrl" id="locationUrl" value="https://www.">
+
+                </fieldset>
+                <fieldset class="formtab" lang="en-US">
+                    <legend>Coordinates</legend>
+                    <p> <label for="frmLocX">Longitude </label> <input step='0.0001' type="number" name="frmLocX"
+                            id="frmLocX"></p>
+                    <p> <label for="frmLoxY">Latitude </label>
+                        <input step='0.0001' type="number" name="frmLocY" id="frmLocY">
+                    </p>
+                </fieldset>
+                <fieldset class="formtab">
+                    <legend>Address</legend>
+                    <p><label for="streetname">Street</label><input type="text" placeholder="Street name"
+                            name="streetname"></p>
+                    <p> <label for="streetnumber">Number</label><input type="text" placeholder="Street number"
+                            name="streetnumber"></p>
+                </fieldset>
+                <fieldset class="formtab">
+                    <legend>Country</legend>
+                    <p><label for="locationcountry">Country</label>
+                        <select class="invalid" oninput="this.className = ''" for="location-form" name="locationcountry"
+                            id="locationcountry" required onchange="countryChange(this,'loccity')">
+                            <option selected disabled>Select a country</option>
+                            {% for c in countries %}
+                            <option value="{{c.code}}">{{c.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                    <p><label for="loccity">City</label><br>
+                        <select class="invalid" oninput="this.className = ''" placeholder="City" name="city"
+                            id="loccity" required>
+                            <option selected disabled>Select a city</option>
+                        </select>
+                    </p>
+                </fieldset>
+                <!-- <input type="submit" value="Submit" for="location-form" /> -->
+                <div class="formControls">
+                    <input type="button" id="nextBtn" onclick="nextPrev(1)" value="Next"><input type="button"
+                        id="prevBtn" onclick="nextPrev(-1)" value="Previous">
+                </div>
+
+                <div style="text-align:center;margin-top:1em;">
+                    <span class="step"></span>
+                    <span class="step"></span>
+                    <span class="step"></span>
+                    <span class="step"></span>
+                </div>
+            </form>
+        </article>
+    </section>
+    <section>
+        <h2> User location</h2>
+        <details>
+            <summary>
+                Share
+            </summary>
+
+
+            <input type="button" value="📍 Share Location" name="getGeo" id="getGeo" onclick="getGeo()">
+            <form name="userGeo" id="userGeo">
+                <fieldset>
+                    <legend>Position</legend>
+                    <label for="locX">X :</label><input type="text" name="locX" id="locX" value="" readonly>
+                    <label for="locY">Y :</label><input type="text" name="locY" id="locY" value="" readonly>
+                    <label for="geoAddress">Address :</label>
+                    <span id="geoAddress" style="color:white"></span>
+
+                </fieldset>
+            </form>
+            <!-- <article class="mapEmbed">
+            <iframe id="elemMapEmbed" width="425" height="350" frameborder="0" scrolling="no" marginheight="0"
+                marginwidth="0" src="https://www.openstreetmap.org/#map=19/50.08552/14.44695"
+                style="background:grey;position:fixed;top:0;right:0;" referrerpolicy="origin-when-cross-origin"
+                allowfullscreen allow="">A map should be displayed here</iframe><br /><small><a id="elemMapEmbedHref"
+                    href=>Grotere kaart
+                    weergeven</a></small>
+        </article> -->
+        </details>
+    </section>
+    <section>
+        <article id="add-event">
+            <form action="api/event" method="post" name="event-form" id="event-form">
+                <fieldset>
+                    <legend>New Event</legend>
+                    <label for="eventname">Event Name</label><input au type="text" placeholder="Name" name="eventname"
+                        required>
+                    <label for="eventdatetime">Event DateTime</label>
+                    <input type="date" value={{NOW}} min="2022-01-01" max="2099-01-01" placeholder="Event Date"
+                        name="eventdate" id="eventdate" required>
+                    <label for="eventduration">Duration (hrs)</label><input type="range" min="0" max="148" value="10"
+                        onchange="this.title=this.value" name="eventduration" id="eventduration">
+                    <label for="eventdescription">Description</label><textarea placeholder="Description"
+                        name="eventdescription" id="eventdescription" maxlength="1200" data-scope="eventscope" cols=""
+                        rows="5"></textarea>
+                </fieldset>
+                <fieldset id="eventPrice">
+                    <legend>Entrance & Tickets</legend>
+                    <label for="evP" id="evPlabel">Free Entry</label>
+                    <input type="checkbox" name="evP" id="evP" checked
+                        onclick="this.type='number';this.value='1';document.getElementById('evPlabel').innerHTML='Price in &euro;'"
+                        max="999" min="1" step="0.5" value="Price">
+                    <label for="presale">Presale</label><input type="checkbox" title="Presale" disabled>
+                    <!-- <div id="eventPriceCheck" style="display:block;">
+                        <label for="myCheck" id="eventPriceLabel">Free</label>
+                        <input type="checkbox" id="myCheck"
+                            onclick="displayOnChecked('eventPriceCheck','eventPriceValue')"
+                            aria-labelledby="eventPriceLabel" checked>
+                    </div>
+                    <div id="eventPriceValue" style="display:none;">
+                        <label for="eventprice">Price in &euro;</label>
+                        <input type="number" placeholder="Event Price" min="0" step="0.01" max="999" value="10"
+                            name="eventprice">
+                    </div> -->
+                </fieldset>
                 <!-- <output for="eventstarttime" value="#eventstarttime.value"></output>  -->
-                <br>
-                <select name="eventlocation" id="eventlocation">
-                    {% for x in locations %}
-                    <option value="{{x.name}}">{{x.name}}</option>
-                    {% endfor %}
-                </select><br>
-                <select name="eventtype" id="eventtype">
-                    {% for type in eventtypes%}
-                    <option value="{{type}}">{{type}}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Submit" />      <input type="reset"  value="Clear Form"><br>
+                <fieldset>
+                    <legend>Event Location</legend>
+                    <p>
+                        <label for="eventlocation">Location</label><select name="eventlocation" id="eventlocation">
+                            {% for loc in locations %}
+                            <option value="{{loc.name}}">{{loc.name}} {{loc.city}}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                    <p><label for="eventtype">Type</label><select name="eventtype" id="eventtype">
+                            {% for type in eventtypes%}
+                            <option value="{{type}}">{{type}}</option>
+                            {% endfor %}
+                        </select></p>
+                    <p>
+                        <label for="eventorg">Organizer</label><select name="eventorg" id="eventorg"
+                            onchange=getData(eventorg.id,eventcountry.id)>
+                            {% for org in orgs%}
+                            <option value="{{org.name}}">{{org.name}} {{org.city}}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                    <p>
+                        <label for="eventcity">City</label><input type="text" name="eventcity" id="eventcity">
+                    </p>
+                    <p>
+                        <label for="eventbanner">Banner</label><input type="url" maxlength="256" name="eventbanner"
+                            id="eventbanner">
+                    </p>
+                </fieldset>
 
-            </form></article>
-        </section>
-        <!-- Start of event-form -->
-        <section id="event-section">
-           
-        </section>
 
-    </main>
 
+
+
+                <fieldset><label for="eventbadges">Eventbadges</label>
+                    <select name="eventbadges" id="eventbadges" multiple>
+                        {% for b in badges%}
+                        <option value="{{b.id}}">{{b.name}} {{b.icon}}</option>
+                        {% endfor %}
+                    </select> <br>
+                </fieldset>
+
+                <!-- <button onclick="var s = document['#eventbadges'];
+                    var c =document.getElementById(''); cloneNode(s).appendChild(c)">Add more...</button> -->
+                <fieldset class="frmControls">
+                    <input type="reset" value="Reset"><input type="submit" value="Submit" />
+
+                </fieldset>
+            </form>
+
+        </article>
+        <article id="add-org">
+            <label for="organisation-form"></label><br>
+            <form method="post" id="organisation-form" action="api/organisation">
+                <fieldset>
+                    <legend>Add an Organisation</legend>
+                    <label for="orgname">Name: </label><input type="text" name="orgname" id="orgname" required
+                        placeholder="Name" maxlength="256">
+                    <label for="orgwebsite">Website</label><input type="url" name="orgwebsite" id="orgwebsite"
+                        placeholder="Website">
+
+                    <label for="country">Country: </label>
+                    <select name="country" id="country" required onchange='countryChange(this,"citySelect");'>
+                        <option value="0" selected disabled>Select a country</option>
+                        {% for cnt in countries %}
+                        <option value="{{cnt.code}}">{{cnt.name}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="citySelect">City: </label>
+                    <select name="city" id="citySelect">
+                        <option selected disabled value="0">Select a city</option>
+                    </select>
+                    <br>
+                    <input type="submit" value="Submit"><br>
+                </fieldset>
+            </form>
+        </article>
+    </section>
+    <!-- Start of event-form -->
+    {% if events %}
+    <section id="event-section">
+        {% for ev in events %}
+        {% block loop_item scoped %}
+        <article class="ev">
+            <p>{{ev.name}}</p>
+            <p>{{ev.date}}</p>
+            <p>{{ev.price}}</p>
+            <p>{{ev.location}}</p>
+        </article>
+        {% endblock %}
+        {% endfor %}
+    </section>
+    {% endif %}
+
+
+
+</main>
+
+{% endblock %}
+
+<datalist id="countriesEurope">
+    <option value="" selected disabled>Select...</option>
+    {% for k in countries %}
+    <option value="{{k}}">{{k}}</span>
+        {% endfor %}
+</datalist>
 
 </body>
-<style>
-  
-</style>
 
-</html>
+{% if modal %}
+{% include "form.html" with context %}
+{% endif %}

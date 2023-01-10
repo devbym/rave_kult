@@ -1,74 +1,16 @@
-from sqlalchemy import (Column,DateTime,
-                        ForeignKey, Integer, String, Text)
-from sqlalchemy.orm import backref, relation
-from database import Base, engine
+from dataclasses import dataclass, field
+from typing import List
+import logging as log
+from flask_sqlalchemy import Model
 
-import pandas as pd
+from sqlalchemy import (Column, DateTime,
+                        ForeignKey, Integer, String, Text, Float)
+from sqlalchemy.orm import backref, relation, column_property
+
+from database import Base, sesh, db
 from enum import Enum, auto
+from werkzeug.security import check_password_hash
 from datetime import datetime as dt
-
-
-def dropTable(name):
-    cursor = engine.connect()
-    stmt = "DROP table "+name
-    cursor.execute(stmt)
-
-class UserRole(Enum):
-    ADMIN = auto()
-    AUTHOR = auto()
-    DEFAULT = auto()
-
-    @staticmethod
-    def members():
-        return UserRole._member_names_
-
-
-class Users(Base):
-    __tablename__ = "Users"
-    id = Column("user_id", Integer, primary_key=True)
-    name = Column(String(100))
-    email = Column(String(100), unique=True)
-    func = Column(String(200))
-    pwd = Column(String(132))
-    salt = Column(String(32), nullable=True)
-    created = Column(DateTime, nullable=True,server_default=str(dt.now()))
-    role = Column(String(32), nullable=True)
-#    updated = Column(DateTime(timezone=True), onupdate=dt.now().isoformat())
-
-    def __init__(self, name, email, func, pwd, salt=None, role: UserRole = None):
-        self.name = name
-        self.email = email
-        self.func = func
-        self.pwd = pwd
-        self.role = role
-        if salt is not None:
-            salt = salt
-        else:
-            self.salt = self.pwd.split("$")[1]
-        self.created = None
-
-    def __repr__(self):
-        return f"<User {self.name} with id {self.id}>"
-
-
-class Location(Base):
-    __tablename__ = "Location"
-    id = Column("locationID", Integer, primary_key=True)
-    name = Column(String(256))
-    #x = Column(Float(8))
-    #y = Column(Float(8))
-    streetname = Column(String(256))
-    streetnumber = Column(String(128))
-    city = Column(String(256))
-    country = Column(String(32))
-    foreign = relation('Event', backref=backref('Location'))
-
-    def __init__(self, name: str, streetname: str, streetnumber: str, city: str, country: str):
-        self.name = name
-        self.streetname = streetname
-        self.streetnumber = streetnumber
-        self.city = city
-        self.country = country
 
 
 class EventType(Enum):
@@ -77,47 +19,277 @@ class EventType(Enum):
     FESTIVAL = auto()
     BEACH = auto()
     FOREST = auto()
+    SECRET = auto()
+    OTHER = auto()
+    BUSINESS = auto()
 
 
 class Event(Base):
-    __tablename__ = "Event"
-    id = Column("EventID", Integer, primary_key=True, autoincrement=True)
-    name = Column(String(120))
-    eventdate = Column(DateTime,nullable=True)
-    #eventstarttime = Column(Integer)
-    #date = Column(String(64),DateTime)
-    #time = Column(Time(timezone=True))
-    location = Column(String(256), ForeignKey('Location.name'))
-    organizer = Column(String(120), nullable=True)
-    description = Column(Text(), nullable=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    date = Column(String(120), nullable=False)
+    duration = Column(Integer)
+    description = Column(Text, nullable=True)
     price = Column(Integer, nullable=True)
     maxtickets = Column(Integer, nullable=True)
-    eventtype = Column(String(32))
-#    Created = Column(DateTime(timezone=True), server_default=func.now())
-#    LastUpdate = Column(DateTime(timezone=True), onupdate=dt.now())
+    type = Column(String(32), default=str(EventType.CLUB))
+    badges = relation("Badge", backref=backref('event'))
 
-    """Create an event and publish tickets for it"""
+    location = Column(
+        String, ForeignKey('location.name'), nullable=False)
+    org = Column(Integer, ForeignKey('organisation.id'), nullable=False)
+    city = Column(Integer, ForeignKey('city.id'), nullable=False)
+    banner = Column(Integer, ForeignKey('eventimage.id'), nullable=False)
 
-    def __init__(self, name: str, eventdate, location: Location, price: str, eventtype: EventType, organizer=None, image=None, maxtickets=10, description=None):
+    """Add an init function? Or use dataclasses to defer an init method. Dataclasses must be integrated with SQLalchemy """
+
+    def __repr__(self):
+        return f"<{self.id}: EVENT {self.name} in {self.location} by: {self.org} on {self.date}>"
+
+    @classmethod
+    def row(self):
+        return sesh.scalars(select(self))
+
+    @classmethod
+    def getAll(cls):
+        return {event for event in cls.query.all()}
+
+    @staticmethod
+    def add(r: dict, **kwargs):
+        ev = Event(
+            name=r.get("eventname"),
+            date=r.get("eventdate"),
+            duration=r.get("eventduration"),
+            location=r.get("eventlocation"),
+            description=r.get("eventdescription"),
+            price=r.get("eventprice"),
+            type=r.get("eventtype"),
+            org=r.get("eventorg"),
+            city=r.get("eventcity"),
+            banner=r.get("eventbanner")
+        )
+
+        # ev.badges.append(["SOLD OUT"])
+        return ev
+
+
+class UserRole(Enum):
+    ADMIN = auto()
+    AUTHOR = auto()
+    USER = auto()
+    DEFAULT = auto()
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
+    @ staticmethod
+    def members():
+        return UserRole.__members__
+
+
+@db.mapper_registry.mapped
+@dataclass
+class Location:
+    __tablename__ = "location"
+    __sa_dataclass_metadata_key__ = "sa"
+    id: int = field(init=False, metadata={
+        "sa": Column(Integer, primary_key=True)})
+    name: str = field(default=None, metadata={
+        "sa": Column(String(50), unique=True)})
+    x: float = field(default=False, metadata={
+        "sa":    Column(Float)
+    })
+    y: float = field(default=False, metadata={
+        "sa":    Column(Float)
+    })
+    streetname = Column(String(256))
+    streetnumber = Column(String(128))
+    city: int = field(default=False, metadata={
+        "sa": Column(Integer, ForeignKey("city.id"), nullable=False)
+    })
+    country: str = field(default=False, metadata={"sa": Column(
+        String, ForeignKey("country.name"), nullable=False)})
+    # country_id: int = field(default=False, metadata={
+    #     "sa": Column(Integer, ForeignKey('country.id'))})
+
+    query = sesh.query_property()
+
+
+class Country(Base):
+    """ Defines a Country with its countrycode"""
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+    code = Column(String(5), nullable=False)
+    cities = relation("City", backref=backref('country'), lazy="subquery")
+    # locations = relation("Location", lazy=True)
+
+    def __repr__(self):
+        return f'<{self.name}>'
+
+
+@db.mapper_registry.mapped
+@dataclass
+class Stad:
+    __tablename__ = "stad"
+    __sa_dataclass_metadata_key__ = "sa"
+    id: int = field(init=False, metadata={
+        "sa": Column(Integer, primary_key=True)})
+    name: str = field(default=None, metadata={
+        "sa": Column(String(50), unique=True)})
+    country: str = field(default=None, metadata={"sa": Column(
+        String, ForeignKey("country.name"), nullable=False)})
+
+
+class City(Base):
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+    organisations = relation('Organisation')
+    country_id = Column(Integer, ForeignKey('country.id'), nullable=False)
+
+    def __init__(self, name: str, country: Country) -> None:
         self.name = name
-        self.location = location
-        self.eventdate = eventdate
-        self.price = price
-        self.maxtickets = maxtickets
-        self.organizer = organizer
-        if image is not None:
-            self.Image = image
+        self.country = country
+
+    def __repr__(self):
+        return f'<{self.name}, {self.country.code}>'
+
+
+class Users(Base):
+    email = Column(String(100), unique=True)
+    func = Column(String(200))
+    pwd = Column(String(132))
+    salt = Column(String(32), nullable=True)
+    role = Column(String(32), nullable=True)
+
+    def __init__(self, name, email, func, pwd, role: UserRole, **salt):
+        self.name = name
+        self.email = email
+        self.func = func
+        self.pwd = pwd
+        self.role = str(role)
+        if salt is not None:
+            salt = salt
         else:
-            self.Image = "https://persgroep.pubble.cloud/d9c7ad83/content/2019/3/151e47b4-5655-43cf-b37b-40edd2e8b6e3_thumb840.jpg",
+            self.salt = self.pwd.split("$")[1]
 
-        self.eventtype = eventtype
-        self.description = description
-        #self.json = json.dumps(self, indent=4, skipkeys=True)
+    def __repr__(self):
+        return f"<User {self.name}:Id {self.id}>"
+
+    @ staticmethod
+    def getAll():
+        return {event for event in sesh.query(Users).all()}
+
+    @ staticmethod
+    def login(request):
+        r = request.form
+        user = Users.query.filter(Users.name == r.get("name")).first()
+        check = check_password_hash(user.pwd, r.get("pwd"))
+        if user:
+            if check:
+                log.info("Login successful")
+                return user
+            elif not check:
+                log.info("Password incorrect")
+                return None
+        else:
+            msg = (f"User {r.get('name')} not found. \n")
+            raise UserWarning.args+msg
 
 
-class Organizer:
-    pass
+class Organisation(Base):
+    def __init__(self, name: str, country: str, city: str, url=None) -> None:
+        self.name = name
+        self.country = country
+        self.city = city
+        self.url = url
+    name = Column(String(256), nullable=False)
+    country = Column(String, ForeignKey("country.name"),
+                     nullable=False)  # One-to-many
+    city = Column(String, ForeignKey("city.name"), nullable=False)
+    url = Column(String, nullable=True)
+    events = relation("Event", backref=backref(
+        'organisation'), lazy='subquery')
+
+    def __repr__(self) -> str:
+        return f"<ORG:{self.name} ID: {self.id} COUNTRY: {self.country}>"
+
+
+class EventImage(Base):
+    id = Column(Integer, primary_key=True)
+    # event = Column(String, ForeignKey('event.id'), nullable=False)
+    src = Column(String(256))
+    data = Column(Text)
+    image = relation("Event", backref=backref('images', lazy='subquery'))
+
+    def __repr__(self):
+        return f"<EVENT:{self.event} - SRC:{self.src}>"
+
+
+class Badge(Base):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    icon = Column(String, nullable=True)
+    event_id = Column(Integer, ForeignKey("event.id"))
+    # event = relation("Event", backref=backref('badges', lazy='joined'))
+
+    def __repr__(self) -> str:
+        return f"<{self.id} {self.name} {self.icon}>"
+
+
+Country.orgs = relation(
+    "Organisation")
+#Country.locations = relation("Location")
+# Country.locations = relation("location", lazy="subquery")
+
+
+# Organisation.events = relation("Event",backref=backref('organized',lazy='subquery'))
+# City.events = relation("Event",backref=backref('city',lazy=True))
+Location.events: List[Event] = field(default_factory=list, metadata={
+    "sa": relation("Event", backref=backref('location'))})
+
+# MIXINS
+
+
+class Post(Model):
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=False)
+    body = Column(Text, nullable=False)
+    pub_date = Column(DateTime, nullable=False, default=dt.utcnow)
+
+    category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
+    category = relation('Category', backref=backref('posts', lazy=True))
+
+    def __repr__(self):
+        return f'<Post {self.title}>'
+
+
+class Category(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+
+    def __repr__(self):
+        return f'<Category {self.name}>'
+
+
+# rave = Category(name="RAVE")
+# Post(title="abc",body="Some text here",category=rave)
+# Post(title="xyz",body="ZYV text here",category=rave)
+# xpost = Post(title=ev.name,body=ev.description)
+# rave.posts.append(xpost)
+# sesh.add(rave)
+# print(rave.posts,xpost.category)
+
+class File(Base):
+    __tablename__ = 'file'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64))
+    extension = Column(String(8))
+    filename = column_property(name + '.' + extension)
+    path = column_property('C:/' + filename.expression)
 
 
 class Ticket:
     pass
+
+# q = sesh.query(File.path).filter(File.filename == 'foo.txt')

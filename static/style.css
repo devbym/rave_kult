@@ -1,0 +1,379 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap");
+body {
+  font-family: "Open Sans", sans-serif;
+  width: 100%;
+  line-height: 1.25;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.mapEmbed {
+  display: none;
+}
+
+:root {
+  --icon-reddit: url("https: //cdns.iconmonstr.com/wp-content/releases/preview/2016/240/iconmonstr-reddit-3.png");
+}
+
+body > header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+body > header h1 {
+  width: 100%;
+  border-bottom: 1px solid darkorange;
+  text-align: center;
+}
+body > nav {
+  padding: 0.5em 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+body > nav a {
+  padding: 0.5em 1em;
+  border: 1px solid brown;
+}
+
+main {
+  margin: auto;
+  width: 80vw;
+}
+main header.eventfilter {
+  background-color: yellow;
+  padding: 0.5em;
+}
+main h1,
+main h3,
+main h5 {
+  text-align: center;
+}
+main h2,
+main h4,
+main h6 {
+  background: darkorange;
+  text-indent: 0.5em;
+}
+main section {
+  width: 100%;
+  margin: 0.25em auto;
+  line-height: 1.25;
+  padding: 0;
+  background: rgb(200, 200, 200);
+  color: rgb(20, 20, 20);
+}
+main section header {
+  margin: auto;
+}
+main section:first-child {
+  padding: 0.5em;
+}
+main section input {
+  height: 3em;
+  box-shadow: 2px 3px 12px lightgray;
+  margin: 0.5em;
+}
+main section *.wide {
+  grid-column: span 4;
+}
+main section.eventList h1,
+main section.eventList h2,
+main section.eventList h3 {
+  display: flex;
+  margin: auto;
+  vertical-align: middle;
+}
+main section.eventList.eventfilter header {
+  display: flex;
+  margin: auto;
+  text-align: center;
+}
+main section.eventList.eventfilter span {
+  font-weight: 700;
+  font-size: 200%;
+}
+main section article {
+  padding: 0;
+  margin: auto;
+}
+main section article header {
+  width: 100%;
+  font-size: 125%;
+  letter-spacing: 1px;
+  padding: 0.5em;
+}
+main section article.ev {
+  display: grid;
+  grid-template-columns: 3fr auto max-content auto 3fr;
+  grid-gap: 0 0.25em;
+}
+main section article.ev > header {
+  grid-column: span 9;
+  background-color: dodgerblue;
+  height: auto;
+}
+main section article.ev > header > :nth-child(1) {
+  flex: 35%;
+}
+main section article.ev > header > :nth-child(2) {
+  flex: 35%;
+}
+main section article.ev > header > :nth-child(3) {
+  place-self: start;
+  flex: 30%;
+}
+main section article.ev > :nth-child(2) {
+  grid-row: span 3;
+  grid-column: 1;
+  width: 25em;
+  line-break: anywhere;
+}
+main section article.ev aside {
+  height: 100%;
+  grid-column: span 3;
+  grid-row: span 1;
+  display: flex;
+}
+main section article.ev .badges {
+  display: flex;
+  place-items: flex-end;
+  margin: 0;
+  grid-row: 4;
+  width: 100%;
+  grid-column: 3/6;
+  gap: 0 0.5em;
+}
+main section article.ev .badge {
+  padding: 0.25em;
+  border: 1px solid grey;
+  border-radius: 5% 5%;
+  flex: 1;
+  text-shadow: 1px 1px black;
+  text-align: center;
+}
+main section article.ev img {
+  grid-row: span 3;
+  grid-column: span 3;
+  max-width: 20em;
+  max-height: 20em;
+  width: max-content;
+  height: max-content;
+  margin: 0 auto;
+  object-fit: fill;
+}
+main section article p,
+main section article span {
+  color: white;
+  text-align: left;
+}
+main section article form fieldset {
+  grid-template-columns: auto 1fr;
+  border: 0;
+  font-weight: 300;
+}
+main section article form fieldset * {
+  justify-self: stretch;
+}
+main section article form fieldset legend {
+  color: white;
+  max-width: 75%;
+  width: fit-content;
+}
+main section article form input,
+main section article form select,
+main section article form textarea {
+  width: 100%;
+  place-self: center;
+  max-width: 70%;
+  align-self: stretch;
+}
+main section article form input[type=submit],
+main section article form input[type=reset] {
+  padding: 0.25em 2em;
+  width: 80%;
+  margin: 0 1em;
+}
+main section article img {
+  margin: 0;
+  padding: 0;
+}
+main section img {
+  display: inline-flex;
+  object-fit: contain;
+  vertical-align: middle;
+  height: auto;
+  width: 100%;
+}
+
+form,
+* > form {
+  place-self: center;
+  background-color: #ffffff;
+  margin: 4em auto;
+  padding: 1em;
+  width: 70%;
+  min-width: 12em;
+}
+form fieldset,
+* > form fieldset {
+  place-items: center;
+  display: grid;
+  grid-gap: 0.5em;
+}
+form fieldset legend,
+* > form fieldset legend {
+  max-width: 75%;
+  background-color: gray;
+  color: white;
+  padding: 0.5em 1em;
+  text-align: center;
+}
+form fieldset label,
+* > form fieldset label {
+  color: black;
+  font-weight: 500;
+  padding: 0.5em;
+}
+form input,
+form select,
+* > form input,
+* > form select {
+  margin: 0.25em;
+  padding: 0.5em;
+  width: 100%;
+}
+
+footer {
+  margin: 0.5em auto;
+  display: flex;
+  justify-content: space-between;
+  border: 0.5em solid #666;
+  width: 80vw;
+  padding: 0.5em;
+}
+footer a {
+  padding: 0.5em 1em;
+}
+
+dialog {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  transition: all 0.5s ease-in-out;
+  backdrop-filter: blur(10px);
+  height: 100%;
+  width: 100%;
+}
+dialog:target {
+  display: flex;
+  box-shadow: 0 0 2em 0 rgba(212, 212, 212, 0.2), 0 1em 1em 0 rgba(212, 212, 212, 0.24);
+}
+dialog .dlgContent {
+  padding: 1em;
+  background: #333;
+  color: #ccc;
+  max-width: max-content;
+  margin: auto;
+  box-shadow: -4px -4px 3px 3px rgba(157, 157, 157, 0.1), 1px 1px 1em 1em rgba(255, 255, 255, 0.1);
+  transform: translateY(50%);
+  display: grid;
+  grid-template-columns: min-content max-content;
+  gap: 1em;
+}
+dialog .dialogbox {
+  margin: auto;
+  backdrop-filter: blur(1em);
+  background: rgba(255, 140, 0, 0.6);
+  padding: 1em;
+}
+dialog form input {
+  border: 0;
+}
+dialog .frmDefaultbtn {
+  margin: 0 0.5em;
+}
+dialog .dlgClose {
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+}
+dialog .message,
+dialog a {
+  text-decoration: none;
+  color: white;
+}
+dialog h2 {
+  color: white;
+  margin: auto;
+  top: 0;
+  left: 0;
+  position: relative;
+}
+
+#rk-logo1 {
+  max-width: 4em;
+  max-height: 4em;
+  margin: auto;
+  padding: 0.5em;
+}
+
+.formControls {
+  width: 50%;
+  margin: auto;
+  display: flex;
+}
+
+input.invalid {
+  background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.formtab {
+  display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #04AA6D;
+}
+
+header p {
+  margin: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  padding: 1em;
+  margin-right: 2em;
+}
+
+#topCountry,
+#topCity {
+  padding: 0.5em;
+  border: 0;
+  color: navy;
+  background: white;
+  font-size: 100%;
+}
+
+/*# sourceMappingURL=style.css.map */

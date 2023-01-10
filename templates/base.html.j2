@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-nl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"></svg> -->
+  <script type="text/javascript" src="/static/app.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+
+  <link rel="import" href="component.html">
+
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"> -->
+  <title>{% block TITLE %} Rave Connector (Beta) {% endblock TITLE %} </title>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <meta name="flashed-{{message.category}}" content="{{ message.message }}">
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+</head>
+
+<body>
+  <header>
+    <a href="/">
+      <svg class="rk-logo" id="rk-logo1" viewBox="-0.5 -0.5 123 113">
+        <g>
+          <path d="M 57 97 Q 7 57 32 52 Q 57 47 27 12 Q -3 -23 7 107" fill="none" stroke="#ff8c00" stroke-width="10"
+            stroke-miterlimit="10" pointer-events="stroke"></path>
+          <path d="M 67 7 Q 67 7 67 107" fill="none" stroke="#ff8c00" stroke-width="10" stroke-miterlimit="10"
+            pointer-events="stroke"></path>
+          <path d="M 117 107 Q 77 57 67 52 Q 57 47 117 7" fill="none" stroke="#ff8c00" stroke-width="10"
+            stroke-miterlimit="10" pointer-events="stroke"></path>
+        </g>
+      </svg></a>
+    <h1>{{self.TITLE()|e}}</h1>
+    <p class="">
+      <a href="#dlgLogin" class="btn">Log In</a>
+    </p>
+  </header>
+  {% block BODY required%}
+  {% endblock %}
+  {% block footer%}
+  <footer>
+    <div>
+      <strong>RAVEKULT - Rave Connector</strong><br>
+      <span>Written by <a href="https://github.com/devbym">devbym</a> - 2022</span>
+    </div>
+    <div>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/legal">Legal</a>
+    </div>
+    <address>
+      <col>Lange Bosweg
+      <col> 486B <br />
+      <col>1234
+      <col> AB <br />
+      <col>Amsterdam
+    </address>
+    {% if footer %}
+    <span>{{footer}}</span>
+    {% endif %}
+  </footer>
+  {% endblock %}
+</body>
+<dialog id="dlgLogin" title="{{formtitle}}">
+  <div class="dialogbox">
+    <header>
+      <a class="dlgClose" href="#">
+        &times;</a>
+    </header>
+    <form id="frmLoginDialog" target="{{formtarget}}">
+      <fieldset>
+        <legend>Log In</legend>
+        <label for="email">Email</label><input name="email" type="email" required>
+        <label for="pasword">Password </label><input name="password" type="password" required>
+
+        <input type="submit" value="Log in">
+      </fieldset>
+    </form>
+  </div>
+
+</dialog>
+
+
+
+{% if modal %}
+{% include "forms.html" with context %}
+{% endif %}
+
+</html>
